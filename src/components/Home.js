@@ -11,13 +11,10 @@ import HeroImage from './HeroImage';
 import Grid from './Grid';
 import Thumb from './Thumb';
 import Spinner from './Spinner';
+import SearchBar from './SearchBar';
 
 const Home = () => {
-    const {state, loading, error} = useHomeFetch();
-    const getMovieIndex = (min, max) => { 
-        return Math.random() * (max - min) + min;
-    } 
-
+    const {state, loading, error, setSearchTerm} = useHomeFetch();
      
     //Fragment shorthanded
     return (<>
@@ -30,6 +27,7 @@ const Home = () => {
         />
         : null
         }
+        <SearchBar setSearchTerm={setSearchTerm}/>
         <Grid header='popular Movies'>
             {state.results.map(movie => (
                <Thumb
@@ -41,6 +39,7 @@ const Home = () => {
             }
         </Grid>
         <Spinner/>
+
     </>);
 
 }
