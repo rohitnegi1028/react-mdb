@@ -14,6 +14,7 @@ export const useHomeFetch = () => {
     const [loading, setLoading] = useState(false); // useStateReturns Array
     const [error, setError] = useState(false); 
     const [searchTerm, setSearchTerm] = useState(""); 
+    const [isLoadingMoe, setIsLoadingMoe] = useState(false); 
 
     const fetchMovies = async (page, searchTerm = "") => {
         try {
@@ -40,7 +41,13 @@ export const useHomeFetch = () => {
         fetchMovies(1, searchTerm);
     }, [searchTerm])
 
+    useEffect(() => {
+        if(!isLoadingMoe) return;
+        fetchMovies(state.page+1, searchTerm);
+        setIsLoadingMoe(false);
+    }, [isLoadingMoe])
 
-    return {state, loading, error, searchTerm, setSearchTerm};
+
+    return {state, loading, error, searchTerm, setSearchTerm, setIsLoadingMoe};
 
 }
