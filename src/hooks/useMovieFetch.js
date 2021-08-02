@@ -1,52 +1,53 @@
-import { useState, useEffect, useCallback } from 'react';
-//API
-import API from '../API'
+import { useState, useEffect } from 'react';
+import API from '../API';
+// Helpers
+import { isPersistedState } from '../helpers';
 
-const initialState = {
-    page : 0,
-    results: [],
-    total_pages: 0,
-    total_results: 0
-}
+export const useMovieFetch = movieId => {
+  const [state, setState] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-export const useMovieFetch = (movieId) => {
+  useEffect(() => {
+    const fetchMovie = async () => {
+      try {
+        setLoading(true);
+        setError(false);
 
-    const [state, setState] = useState(initialState); 
-    const [loading, setLoading] = useState(true); 
-    const [error, setError] = useState(false); 
+        const movie = await API.fetchMovie(movieId);
+        const credits = await API.fetchCredits(movieId);
+        // Get directors only
+        const directors = credits.crew.filter(
+          member => member.job === 'Director'
+        );
 
-    const fetchMovie = useCallback(async (movieId) => {
-        try {
-            setError(false);
-            setLoading(true);
+        setState({
+          ...movie,
+          actors: credits.cast,
+          directors
+        });
 
-            const movie = await API.fetchMovie(movieId);
-            const credits = await API.fetchCredits(movieId);
-            // get directors only
-            const directors = credits.crew.filter(member => member.job === 'Director')
-
-            //Setting movies in state variable for keeping previous values
-            setState(prev => ({
-                ...movie,
-                actors: credits.cast,
-                directors
-            }));
-
-        }
-        catch (error) {
-            console.log(error)
-            setError(true);
-        }
         setLoading(false);
-    },[movieId]);
-    //Initial Render & search
-    useEffect(() => {
-        fetchMovie(movieId);
-    }, [movieId,fetchMovie])
+      } catch (error) {
+        setError(true);
+      }
+    };
 
+    const sessionState = isPersistedState(movieId);
 
-    console.log(error)
+    if (sessionState) {
+      setState(sessionState);
+      setLoading(false);
+      return;
+    }
 
-    return {state, loading, error};
+    fetchMovie();
+  }, [movieId]);
 
-}
+  // Write to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem(movieId, JSON.stringify(state));
+  }, [movieId, state]);
+
+  return { state, loading, error };
+};
