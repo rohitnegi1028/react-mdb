@@ -1,3 +1,4 @@
+import PropTypes  from 'prop-types';
 import React from 'react';
 
 
@@ -9,5 +10,10 @@ const Button = ({text, callback}) => (
         {text}
     </Wrapper>
 )
+
+Button.prototype ={
+    text : PropTypes.string,
+    callback : PropTypes.func
+}
 
 export default Button;
