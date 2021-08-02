@@ -47,6 +47,8 @@ export const useHomeFetch = () => {
               return;
             }
           }
+          console.log('Grabbing from api');
+
         fetchMovies(1, searchTerm);
     }, [searchTerm])
 
