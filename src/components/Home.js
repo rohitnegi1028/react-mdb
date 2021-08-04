@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-//API
-import API from '../API'
+import React from 'react';
 //Config
-import { POSTER_SIZE, BACKDROP_SIZE, IMAGE_BASE_URL } from '../config';
+import { BACKDROP_SIZE, IMAGE_BASE_URL, POSTER_SIZE } from '../config';
+//Hooks
+import { useHomeFetch } from '../hooks/useHomeFetch';
 //Image 
 import NoImage from '../images/no_image.jpg';
-//Hooks
-import { useHomeFetch  } from '../hooks/useHomeFetch';
-import HeroImage from './HeroImage';
-import Grid from './Grid';
-import Thumb from './Thumb';
-import Spinner from './Spinner';
-import SearchBar from './SearchBar';
 import Button from './Button';
+import Grid from './Grid';
+import HeroImage from './HeroImage';
+import SearchBar from './SearchBar';
+import Spinner from './Spinner';
+import Thumb from './Thumb';
 
 const Home = () => {
     const {state, loading, error, searchTerm, setSearchTerm, setIsLoadingMoe} = useHomeFetch();
