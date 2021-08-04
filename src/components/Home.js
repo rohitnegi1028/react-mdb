@@ -34,7 +34,6 @@ class Home extends Component {
       this.setState({ error: false, loading: true });
 
       const movies = await API.fetchMovies(searchTerm, page);
-
       this.setState(prev => ({
         ...prev,
         movies: {
